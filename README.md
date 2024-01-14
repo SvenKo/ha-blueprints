@@ -1,2 +1,8 @@
-# ha-blueprints
-Home Assistant Blueprints
+# Home Assistant Blueprints
+A small collection of Home Assistant Blueprints.
+
+## Very simple and small test automations.
+### Time / Weekday Action
+A very small and simple automation for executing an action (or several) at a specific time on a selectable day of the week.
+
+
