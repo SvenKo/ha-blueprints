@@ -16,7 +16,7 @@ https://github.com/SvenKo/ha-blueprints/blob/main/src/ha-blueprint_time-weekday.
 ### Battery Check
 An automatic process to check the battery states.
 
-While looking for a blueprint to monitor the battery status of all devices, I found Sbyx automation. However, I was missing some information about it, and I wanted to slightly revise the option to select the day of the week, including a few minor changes. Therefore here is a revised version.
+While looking for a blueprint to monitor the battery status of all devices, I found [sbyx](https://gist.github.com/sbyx/1f6f434f0903b872b84c4302637d0890) automation. However, I was missing some information about it, and I wanted to slightly revise the option to select the day of the week, including a few minor changes. Therefore here is a revised version.
 There are devices that monitor the status internally and simply set a switch to the status, and some that indicate the current value in percent. Both are taken into account in this automation.
 
 When selecting the exclude, please be sure to use the entity.
