@@ -1,0 +1,103 @@
+# Blueprint metadata
+blueprint:
+  name: "Battery Check"
+  description: "An automatic process to check the battery states."
+  domain: automation
+  source_url: https://github.com/SvenKo/ha-blueprints/blob/main/src/ha-blueprint_battery-check.yaml
+  input:
+    time:
+      name: Time
+      description: Time at which the check should be carried out.
+      default: "10:00:00"
+      selector:
+        time: {}
+    weekday:
+      name: Weekday
+      description: Day of the week on which the check should be carried out.
+      default: [mon, tue, wed, thu, fri, sat, sun]
+      selector:
+        select:
+          options:
+          - label: Monday
+            value: mon
+          - label: Tuesday
+            value: tue
+          - label: Wednesday
+            value: wed
+          - label: Thursday
+            value: thu
+          - label: Friday
+            value: fri
+          - label: Saturday
+            value: sat
+          - label: Sunday
+            value: sun
+          custom_value: false
+          multiple: true
+    threshold:
+      name: Battery warning level threshold
+      description: Threshold Minimum.
+      default: 20
+      selector:
+        number:
+          min: 10.0
+          max: 100.0
+          unit_of_measurement: '%'
+          mode: slider
+          step: 10.0
+    exclude:
+      name: Excluded Sensors
+      description: "Battery sensors to exclude (e.g. smartphone) from detection. Use Entity!"
+      default: {}
+      selector:
+        target:
+          entity:
+            device_class: battery
+    actions:
+      name: Actions
+      selector:
+        action:
+
+variables:
+  threshold: !input threshold
+  exclude: !input exclude
+  sensors: >-
+    {% set result = namespace(sensors=[]) %}
+    {% for state in states.binary_sensor | selectattr('attributes.device_class', '==', 'battery') | selectattr('state', '==', 'on') %}
+      {% if exclude.entity_id is defined %}
+        {% if not state.entity_id in exclude.entity_id %}
+          {% set result.sensors = result.sensors + [state.name] %}
+        {% endif %}
+      {% else %}
+        {% set result.sensors = result.sensors + [state.name] %}
+      {% endif %}
+    {% endfor %}
+    {% for state in states.sensor | selectattr('attributes.device_class', '==', 'battery') | selectattr('attributes.unit_of_measurement', '==', '%') %}
+      {% if exclude.entity_id is defined %}
+        {% if not state.entity_id in exclude.entity_id %}
+          {% if 0 <= state.state | int(-1) < threshold | int %}
+            {% set result.sensors = result.sensors + [state.name ~ ' (' ~ state.state ~ ' %)'] %}
+          {% endif %}
+        {% endif %}
+      {% else %}
+        {% if 0 <= state.state | int(-1) < threshold | int %}
+          {% set result.sensors = result.sensors + [state.name ~ ' (' ~ state.state ~ ' %)'] %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    {{result.sensors|join(', ')}}
+
+trigger:
+  - platform: time
+    at: !input time
+
+condition:
+  - condition: time
+    weekday: !input weekday
+
+action:
+  - choose: []
+    default: !input actions
+
+mode: single
+max_exceeded: silent

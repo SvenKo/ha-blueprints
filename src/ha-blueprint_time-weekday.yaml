@@ -3,7 +3,7 @@ blueprint:
   name: "Time / Weekday Action"
   description: "A very small and simple automation for executing an action (or several) at a specific time on a selectable day of the week."
   domain: automation
-  author: "Sven Koepfer"
+  source_url: https://github.com/SvenKo/ha-blueprints/blob/main/src/ha-blueprint_time-weekday.yaml
   input:
     time:
       name: Time
