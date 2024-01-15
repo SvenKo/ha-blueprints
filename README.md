@@ -26,7 +26,7 @@ When selecting the exclude, please be sure to use the entity.
 When it comes to the action (I use the fantastic Pushover), you can choose whatever you want. However, it should be noted that Telegram, for example, cannot use an underscore. Therefore, please include a rewrite when outputting. As soon as the message is specified, the warning appears. This is absolutely ok, as normal input does not allow parentheses. Then simply copy the text into the appropriate field.
 
 ```
-{{sensors|replace(\"_\",\" \")}} 
+{{sensors|replace("_"," ")}} 
 ```
 
 ![Screenshot of the automation.](/images/screenshot_pushover.jpg)
